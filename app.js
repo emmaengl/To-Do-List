@@ -3,6 +3,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const getDate = require(__dirname + "/date.js");
+
 const app = express();
 
 let newToDos = [];
@@ -15,13 +17,8 @@ app.set("view engine", "ejs");
 
 /******* GET REQUESTS *******/
 app.get("/", function(req, res){
-  let today = new Date();
-  let options = {
-    weekday: "long",
-    month: "long",
-    day: "2-digit"
-  };
-  let day = today.toLocaleDateString("en-US", options);
+
+let day = getDate();
 
   res.render("list", {listTitle: day, newToDos: newToDos});
 });
@@ -30,9 +27,12 @@ app.get("/work", function(req,res){
   res.render("list", {listTitle: "Work List", newToDos: workToDos});
 });
 
-app.post("/", function(req, res){
-  console.log(req.body);
+app.get("/about", function(req,res){
+  res.render("about");
+});
 
+app.post("/", function(req, res){
+  
   let newToDo = req.body.newToDo; //var containing whatever is typed by user in form
 
   if (req.body.list === "Work") { //
